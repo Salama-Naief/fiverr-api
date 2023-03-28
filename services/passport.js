@@ -112,7 +112,7 @@ passport.use(
     {
       clientID: keys.facebook.clientID,
       clientSecret: keys.facebook.clientSecret,
-      callbackURL: "http://localhost:5000/api/auth/facebook/callback",
+      callbackURL: keys.facebook.callbackURL,
       profileFields: [
         "id",
         "displayName",

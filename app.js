@@ -59,7 +59,8 @@ app.use(fileUpload({ useTempFiles: true }));
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
+      process.env.FRONTEND_URI,
+      "https://fiverr-7yos.onrender.com",
       "https://api.stripe.com",
       "https://accounts.google.com",
     ],
