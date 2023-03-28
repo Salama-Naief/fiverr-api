@@ -46,16 +46,6 @@ app.use(
     max: 100,
   })
 );
-app.use(helmet());
-app.use(xss());
-app.use(express.json());
-app.use(cookieParser());
-app.use(
-  session({ resave: false, saveUninitialized: true, secret: "secretsession" })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(fileUpload({ useTempFiles: true }));
 app.use(
   cors({
     origin: [
@@ -68,6 +58,16 @@ app.use(
     maxAge: 3600,
   })
 );
+app.use(helmet());
+app.use(xss());
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  session({ resave: false, saveUninitialized: true, secret: "secretsession" })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(fileUpload({ useTempFiles: true }));
 
 // routes
 app.use("/api/auth", authRoute);
