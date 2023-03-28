@@ -63,7 +63,14 @@ app.use(xss());
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-  session({ resave: false, saveUninitialized: true, secret: "secretsession" })
+  session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET,
+    cookie: { secure: true },
+    maxAge: 24 * 60 * 60 * 1000,
+    httpOnly: false,
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());
