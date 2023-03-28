@@ -59,8 +59,8 @@ app.use(fileUpload({ useTempFiles: true }));
 app.use(
   cors({
     origin: [
-      "https://fiverr-client-two.vercel.app",
-      "https://fiverr-7yos.onrender.com",
+      "https://fiverr-client-two.vercel.app/",
+      "https://fiverr-7yos.onrender.com/",
       "https://api.stripe.com",
       "https://accounts.google.com",
     ],
