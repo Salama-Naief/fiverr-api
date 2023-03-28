@@ -61,6 +61,7 @@ app.use(
 app.use(helmet());
 app.use(xss());
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   session({
     resave: false,
@@ -73,7 +74,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cookieParser());
 app.use(fileUpload({ useTempFiles: true }));
 
 // routes
