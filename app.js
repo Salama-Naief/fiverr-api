@@ -70,6 +70,7 @@ app.use(
     cookie: { secure: true },
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
+    sameSite: "none",
   })
 );
 app.use(passport.initialize());
