@@ -59,12 +59,13 @@ app.use(fileUpload({ useTempFiles: true }));
 app.use(
   cors({
     origin: [
-      "https://fiverr-client-two.vercel.app/",
-      "https://fiverr-7yos.onrender.com/",
+      process.env.FRONTEND_URI,
       "https://api.stripe.com",
       "https://accounts.google.com",
     ],
+    methods: "GET,POST,PUT,DELETE, PATCH",
     credentials: true,
+    maxAge: 3600,
   })
 );
 
