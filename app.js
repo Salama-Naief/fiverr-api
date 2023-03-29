@@ -48,11 +48,12 @@ app.use(
 );
 app.use(
   cors({
-    origin: [
+    /* origin: [
       process.env.FRONTEND_URI,
       "https://api.stripe.com",
       "https://accounts.google.com",
-    ],
+    ],*/
+    origin: "*",
     methods: "GET,POST,PUT,DELETE, PATCH",
     credentials: true,
     maxAge: 3600,
