@@ -48,13 +48,13 @@ app.use(
 );
 app.use(
   cors({
-    /* origin: [
+    origin: [
       process.env.FRONTEND_URI,
+      "http://localhost:3000",
       "https://api.stripe.com",
       "https://accounts.google.com",
-    ],*/
-    origin: "*",
-    methods: "GET,POST,PUT,DELETE, PATCH",
+    ],
+    methods: ["GET,POST,PUT,DELETE, PATCH"],
     credentials: true,
     maxAge: 3600,
   })
@@ -71,7 +71,7 @@ app.use(
     cookie: { secure: true },
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: "none",
+    sameSite: false,
   })
 );
 app.use(passport.initialize());
