@@ -10,23 +10,17 @@ router.post("/logout", logout);
 
 router.post(
   "/local/login",
-  passport.authenticate("local-login", {
-    successRedirect: keys.frontendUri,
-    failureRedirect: `${keys.frontendUri}/login`,
-  }),
+  passport.authenticate("local-login", {}),
   (req, res) => {
-    res.send("login done");
+    res.redirect(`/api/users/me`);
   }
 );
 
 router.post(
   "/local/register",
-  passport.authenticate("local-signup", {
-    successRedirect: keys.frontendUri,
-    failureRedirect: `${keys.frontendUri}/login`,
-  }),
+  passport.authenticate("local-signup", {}),
   (req, res) => {
-    res.send("register done");
+    res.redirect(`/api/users/me`);
   }
 );
 
