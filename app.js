@@ -10,6 +10,7 @@ import helmet from "helmet";
 import xss from "xss-clean";
 import passport from "passport";
 import session from "express-session";
+import compression from "compression";
 
 import connect from "./db/connect.js";
 import notFound from "./middleware/not-found.middleware.js";
@@ -61,6 +62,9 @@ app.use(
 );
 app.use(helmet());
 app.use(xss());
+// compress all responses
+app.use(compression());
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
