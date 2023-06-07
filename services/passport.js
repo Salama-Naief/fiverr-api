@@ -12,10 +12,12 @@ const LocalStrategy = localOAuth.Strategy;
 const FacebookStrategy = facebookOAuth.Strategy;
 
 passport.serializeUser((user, done) => {
+  console.log("serializeUser", user);
   done(null, user);
 });
 
 passport.deserializeUser(async (user, done) => {
+  console.log("deserializeUser", user);
   done(null, user);
 });
 
@@ -28,10 +30,11 @@ passport.use(
       passReqToCallback: true, // allows us to pass back the entire request to the callback
     },
     async function (req, email, password, done) {
-      const exsistUser = await userModel.findOne({ email: email });
-
+      const exsistUser = await localUserModel.findOne({ email: email });
+      console.log("exsistUser", exsistUser);
+      console.log("exsistUser", email);
       if (exsistUser) {
-        return done({ msg: "the user is registerd already" });
+        return done(new Error("this email is already registerd!"));
       }
       const newUser = new localUserModel({
         email: email,
@@ -41,6 +44,7 @@ passport.use(
       });
       try {
         const user = await newUser.save();
+        console.log("saved user", user);
         done(null, { userId: user._id, isSeller: user.isSeller });
       } catch (error) {
         done(error, null);
@@ -59,17 +63,19 @@ passport.use(
     },
     async function (req, email, password, done) {
       const user = await localUserModel.findOne({
-        email: email,
-        registerType: "local",
+        email,
       });
 
+      console.log("user logedin", user);
       if (!user) {
-        return done({ msg: "user not found please register frist" });
+        return done(new Error("this email is not registerd!"));
+        //return done(null, false, "this email is not registerd!");
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
+      console.log("ismatch", isMatch);
       if (!isMatch) {
-        return done({ msg: "passwrod is wrong" });
+        return done(new Error("passwrod is wrong or email"));
       }
 
       done(null, { userId: user._id, isSeller: user.isSeller });

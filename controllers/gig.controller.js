@@ -17,10 +17,13 @@ export const getGigs = async (req, res) => {
         ...(query.max && { $lt: parseInt(query.max) }),
       },
     }),
-    ...(query.userId && { userId: query.userId }),
+    ...(query.userId && { user: query.userId }),
   };
 
-  const gigs = await gigModel.find(filters).sort({ [query.sort]: -1 });
+  const gigs = await gigModel
+    .find(filters)
+    .sort({ [query.sort]: -1 })
+    .populate({ path: "user", select: "username email image" });
 
   res.status(StatusCodes.OK).json(gigs);
 };
@@ -29,7 +32,9 @@ export const getGigs = async (req, res) => {
 export const getGig = async (req, res) => {
   const { id } = req.params;
 
-  const gig = await gigModel.findById(id);
+  const gig = await gigModel
+    .findById(id)
+    .populate({ path: "user", select: "-password" });
   if (!gig) {
     throw new NotFoundError(`gig with id=${id} is not found`);
   }
@@ -38,7 +43,7 @@ export const getGig = async (req, res) => {
 
 //get my gigd
 export const getMyGig = async (req, res) => {
-  const gigs = await gigModel.find({ userId: req.user.userId });
+  const gigs = await gigModel.find({ user: req.user.userId }).populate("user");
 
   res.status(StatusCodes.OK).json(gigs);
 };
@@ -59,14 +64,14 @@ export const createGig = async (req, res) => {
   }
 
   coverImage = await uploadFiles(req.files.coverImage);
-  const newGig = await new gigModel({
+  const newGig = await new gigModel.create({
     ...JSON.parse(req.body.data),
-    userId: req.user.userId,
+    user: req.user.userId,
     coverImage,
     images,
-  });
-  const gig = await newGig.save();
-  res.status(StatusCodes.CREATED).json(gig);
+  }).populate("user");
+  //const gig = await newGig.save();
+  res.status(StatusCodes.CREATED).json(newGig);
 };
 
 //upadate gig
@@ -81,7 +86,7 @@ export const updateGig = async (req, res) => {
   if (!gig) {
     throw new NotFoundError("gig not found to update");
   }
-  if (gig.userId.toString() !== user.userId) {
+  if (gig.user.toString() !== user.userId) {
     throw new BadRequestError("you can update only your gigs");
   }
   let images = gig.images;
@@ -94,11 +99,13 @@ export const updateGig = async (req, res) => {
     images = await uploadFiles(req.files.images);
   }
 
-  const updatedGig = await gigModel.findOneAndUpdate(
-    { _id: id, userId: user.userId },
-    { ...JSON.parse(req.body.data), images, coverImage },
-    { runValidators: true, new: true }
-  );
+  const updatedGig = await gigModel
+    .findOneAndUpdate(
+      { _id: id, userId: user.userId },
+      { ...JSON.parse(req.body.data), images, coverImage },
+      { runValidators: true, new: true }
+    )
+    .populate("user");
 
   res.status(StatusCodes.OK).json(updatedGig);
 };
@@ -114,7 +121,7 @@ export const deleteGig = async (req, res) => {
   if (!gig) {
     throw new NotFoundError("gig not found to delete");
   }
-  if (gig.userId.toString() !== user.userId) {
+  if (gig.user.toString() !== user.userId) {
     throw new BadRequestError("you can delete only your gigs");
   }
 

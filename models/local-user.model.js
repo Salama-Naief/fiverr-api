@@ -18,9 +18,9 @@ LocalUserSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-LocalUserSchema.methods.comparePassword = async function (canditatePassword) {
-  const isMatch = await bcrypt.compare(canditatePassword, this.password);
-  return isMatch;
-};
+// LocalUserSchema.methods.comparePassword = async function (canditatePassword) {
+//   const isMatch = await bcrypt.compare(canditatePassword, this.password);
+//   return isMatch;
+// };
 
 export default userModel.discriminator("localUser", LocalUserSchema);

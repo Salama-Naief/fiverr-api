@@ -28,6 +28,7 @@ import UnauthenticatedError from "../error/unauthenticated.error.js";
 };
 */
 const auth = (req, res, next) => {
+  console.log("req.useer", req.user);
   if (req.user) {
     next();
   } else {

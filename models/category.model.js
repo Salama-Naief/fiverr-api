@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const categorySchema = Schema(
   {
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,

@@ -11,6 +11,7 @@ import xss from "xss-clean";
 import passport from "passport";
 import session from "express-session";
 import compression from "compression";
+import expressFlash from "express-flash";
 
 import connect from "./db/connect.js";
 import notFound from "./middleware/not-found.middleware.js";
@@ -40,6 +41,7 @@ cloudinary.v2.config({
 });
 
 //middleware
+app.use(expressFlash());
 app.set("trust proxy", 1);
 app.use(
   rateLimiter({
@@ -70,11 +72,11 @@ app.use(cookieParser());
 app.use(
   session({
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
     cookie: {
-      secure: true,
-      httpOnly: true,
+      secure: false,
+      httpOnly: false,
       sameSite: "none",
       maxAge: 60 * 60 * 24 * 1000,
     },

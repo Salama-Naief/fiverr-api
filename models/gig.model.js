@@ -30,7 +30,7 @@ const serviceSchema = new Schema({
 });
 const gigSchema = new Schema(
   {
-    userId: {
+    user: {
       required: [true, "seller is required"],
       type: Schema.Types.ObjectId,
       ref: "User",

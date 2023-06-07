@@ -10,17 +10,24 @@ router.post("/logout", logout);
 
 router.post(
   "/local/login",
-  passport.authenticate("local-login", {}),
+  passport.authenticate("local-login", {
+    successRedirect: "/api/users/me",
+    failureRedirect: "/api/auth/err",
+  }),
   (req, res) => {
-    res.redirect(`/api/users/me`);
+    res.send("");
   }
 );
 
 router.post(
   "/local/register",
-  passport.authenticate("local-signup", {}),
+  passport.authenticate("local-signup", {
+    successRedirect: "/api/users/me",
+    failureRedirect: "/api/auth/err",
+    failureFlash: true,
+  }),
   (req, res) => {
-    res.redirect(`/api/users/me`);
+    res.send("");
   }
 );
 
@@ -35,6 +42,11 @@ router.get(
     ],
   })
 );
+
+router.get("/err", (req, res) => {
+  console.log("req.session.flash", req.session.flash);
+  res.json({ message: req.session.flash.error[0] });
+});
 
 router.get(
   "/google/callback",

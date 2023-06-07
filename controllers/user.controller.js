@@ -48,6 +48,7 @@ export const findBuyer = async (req, res) => {
 
 //get me
 export const getMe = async (req, res) => {
+  console.log("req.user", req.user);
   if (!req.user) {
     throw new BadRequestError("not authentacated");
   }

@@ -11,7 +11,7 @@ export const createCategory = async (req, res) => {
     const image = await fileUplaod(req.files.image);
     const newCategory = new categoryModel({
       ...req.body,
-      userId: req.user.userId,
+      user: req.user.userId,
       image,
     });
     const category = await newCategory.save();
@@ -26,7 +26,7 @@ export const updateCategory = async (req, res) => {
   if (!cat) {
     throw new NotFoundError(`category with id=${req.params.id} not found`);
   }
-  if (req.user.userId !== cat.userId) {
+  if (req.user.userId !== cat.user) {
     throw new BadRequestError("you not allowed to update category");
   }
   if (req.files && req.files.image) {
@@ -52,7 +52,7 @@ export const deleteCategory = async (req, res) => {
   if (!cat) {
     throw new NotFoundError(`category with id=${req.params.id} not found`);
   }
-  if (req.user.userId !== cat.userId) {
+  if (req.user.userId !== cat.user) {
     throw new BadRequestError("you not allowed to delete category");
   }
 

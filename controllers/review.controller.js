@@ -9,7 +9,7 @@ export const creatReview = async (req, res) => {
   const { body, user } = req;
 
   const existReview = await reviewModel.findOne({
-    userId: user.userId,
+    user: user.userId,
     gigId: body.gigId,
   });
   const isValildGig = await gigModel.findOne({ _id: body.gigId });
@@ -19,9 +19,9 @@ export const creatReview = async (req, res) => {
   if (existReview) {
     throw new BadRequestError("Already submitted review for this gig!");
   }
-  const newReview = reviewModel({
+  const newReview = new reviewModel({
     ...body,
-    userId: user.userId,
+    user: user.userId,
   });
   const review = await newReview.save();
   res.status(StatusCode.CREATED).json(review);
@@ -41,11 +41,11 @@ export const updateReview = async (req, res) => {
   if (!review) {
     throw new NotFoundError(`no review found by id=${id}`);
   }
-  if (review.userId.toString() !== user.userId) {
+  if (review.user.toString() !== user.userId) {
     throw new BadRequestError("you can update only your reviews");
   }
   const updatedReview = await reviewModel.findOneAndUpdate(
-    { _id: id, userId: user.userId },
+    { _id: id, user: user.userId },
     { desc: body.desc, rating: body.rating },
     { runValidators: true, new: true }
   );
@@ -56,7 +56,9 @@ export const updateReview = async (req, res) => {
 //find review
 export const getGigReviews = async (req, res) => {
   const { params } = req;
-  const gigReviews = await reviewModel.find({ gigId: params.id });
+  const gigReviews = await reviewModel
+    .find({ gigId: params.id })
+    .populate({ path: "user", select: "-password" });
   if (!gigReviews) {
     throw new NotFoundError("no reviews for this gig");
   }
@@ -72,7 +74,7 @@ export const deleteReview = async (req, res) => {
   if (!review) {
     throw new NotFoundError(`no review found by this id=${id}`);
   }
-  if (review.userId.toString() !== userId) {
+  if (review.user.toString() !== userId) {
     throw new BadRequestError("you can delete only your reviews");
   }
 
